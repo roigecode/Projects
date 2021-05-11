@@ -48,7 +48,8 @@ def gitAddAll():
     time.sleep(1)
 
 def gitCommit():
-    pyautogui.write('git commit -m "New Commit"')
+    message = input("Which message of commit:")
+    pyautogui.write('git commit -m "{message}"')
     pyautogui.press('enter')
     time.sleep(1)
 
