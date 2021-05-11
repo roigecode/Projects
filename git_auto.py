@@ -56,7 +56,9 @@ def gitPush():
     pyautogui.write('git push origin main')
     pyautogui.press('enter')
     time.sleep(2)
-    pyautogui.click(399, 324, clicks=1)
+    pyautogui.click(50, 50, clicks=0)
+    time.sleep(0.2)
+    pyautogui.click(400, 325, clicks=1)
     time.sleep(1)
     
 def gitWriteAutoCredentials():
