@@ -25,7 +25,7 @@ for i in meses:
 for i in meses_str:
     meses_str.update({f"{i}":(meses.get(i))})
 
-# Codigo para colores TODO iterar i comprobar si el value es > 0 o no 
+# Codigo para colores TO-DO iterar i comprobar si el value es > 0 o no 
 colors = ['green', 'green', 'green', 'green', 'green','green','green','green','red','green','green','green']
 plt.figure(figsize=(17, 10))
 plt.bar(list(meses_str.keys()), meses.values(), color=colors, edgecolor = 'black')
