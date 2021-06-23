@@ -1,6 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import datetime
+import seaborn as sns
+import numpy as np
 
 # Abrimos el archivo
 path = r"C:\Users\USUARIO\Desktop\Mensual.xlsx"
@@ -22,7 +25,7 @@ for i in meses:
 for i in meses_str:
     meses_str.update({f"{i}":(meses.get(i))})
 
-# Codigo para colores TO-DO iterar y comprobar si el value es > 0 o no 
+# Codigo para colores TODO iterar i comprobar si el value es > 0 o no 
 colors = ['green', 'green', 'green', 'green', 'green','green','green','green','red','green','green','green']
 plt.figure(figsize=(17, 10))
 plt.bar(list(meses_str.keys()), meses.values(), color=colors, edgecolor = 'black')
@@ -31,4 +34,5 @@ plt.ylabel('Variacion (%)')
 plt.title('S&P500 : 01/01/1970 - 23/06/2021')
 plt.xticks(rotation=45)
 plt.tick_params(axis='x', labelsize=12)
+#plt.savefig(r"C:\Users\USUARIO\Desktop\spmonthly.png",bbox_inches='tight', dpi=100)
 plt.show()
