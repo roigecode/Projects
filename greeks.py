@@ -86,7 +86,7 @@ def theta(self):
     # We zoom in into the orange dot:
     self.play(self.camera.frame.animate.scale(0.5).move_to(moving_dot))
 
-    # Updater to follow the dot with the camera:
+    # Updater function to follow the dot with the camera:
     def update_curve(mob):
         mob.move_to(moving_dot.get_center())
 
