@@ -1,6 +1,6 @@
+from math import *
 from manim import *
-from math import sqrt
-from manim.utils import scale
+from manim.utils import scale, tex_templates
 
 class MainFunction(MovingCameraScene):
     def construct(self):
@@ -10,6 +10,7 @@ class MainFunction(MovingCameraScene):
         vega(self)
         theta(self)
         rho(self)
+        box_all(self)
 
 def delta(self):
     pass
@@ -25,25 +26,119 @@ def delta_gamma(self):
     # Create a LaTeX template for the title:
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-    title_delta = Tex(r'\underline{$\delta$ \& $\gamma$ - Why does the value of our options change?:}', tex_template=myTemplate, font_size=40).move_to(UP*2)
+    title_delta = Tex(r'\underline{$\Delta$ \& $\Gamma$ - Why does the value of our options change?}', tex_template=myTemplate, font_size=40).move_to(UP*2)
 
     # We create the image object and display it:
     image_delta = ImageMobject("media/images/theta_time_decay/delta_explained.png")
-    self.play(FadeIn(title_delta),FadeIn(image_delta))
+    self.play(Write(title_delta),FadeIn(image_delta))
     self.wait()
 
     # We group our two elements to be able to surround them and 
     # move them around:
     gDeltaGamma = Group(title_delta,image_delta)
-    framebox1 = always_redraw(lambda: SurroundingRectangle(gDeltaGamma, buff = .1))
-    self.play(Write(framebox1))
-    self.play(gDeltaGamma.animate.scale(0.16).shift(LEFT*5.5,UP*2.75))
+    framebox_dg = always_redraw(lambda: SurroundingRectangle(gDeltaGamma, buff = .1))
+    self.play(Write(framebox_dg))
+    self.play(gDeltaGamma.animate.scale(0.18).shift(LEFT*5.5,UP*2.75))
+
+    global dg 
+    dg = Group(gDeltaGamma,framebox_dg)
+
+    self.wait()
 
 def vega(self):
-    pass
 
-def rho(self):
-    pass
+    # Create title and first equation:
+    myTemplate = TexTemplate()
+    myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
+    title_vega = Tex(r'\underline{$\nu$ - How does IV affect our options?}', tex_template=myTemplate, font_size=40).move_to(UP)
+    eq_vega = Tex(r'$\nu = \dfrac{\partial V}{\partial \sigma}$', tex_template=myTemplate, font_size=40)
+
+    self.play(Write(title_vega))
+    self.play(Write(eq_vega))
+    self.wait(0.5)
+    self.play(FadeOut(eq_vega))
+    self.play(title_vega.animate.shift(UP*2))
+
+    # Create the axes:
+    ax = Axes(
+            x_range = [-5, 5, 1],
+            y_range = [0, 1, 0.2],
+            tips=False,
+            axis_config = {'include_numbers':False}
+        )
+
+    # Initialize mu (distribution mean) and sigma (standard deviation) ValueTracker to 0 and 1
+    mu = ValueTracker(0)
+    sigma = ValueTracker(1)
+    k = ValueTracker(1)
+
+    curve = always_redraw(lambda: ax.plot(
+        lambda x: PDF_normal(x, 0, sigma.get_value(), k.get_value())).set_color(WHITE)
+    )
+
+    graphGroup = Group(ax,curve)
+    graphGroup.scale(0.5)
+
+    # Text to display distrubtion mean
+    sigma_text = MathTex(r'\sigma =').next_to(ax, UP*4, buff=0.2).set_color(WHITE)
+    sigma_text.shift(LEFT*0.4)
+
+    sigma_value_text = always_redraw(
+        lambda: DecimalNumber(num_decimal_places=2)
+        .set_value(sigma.get_value())
+        .next_to(sigma_text, RIGHT, buff=0.2)
+        .set_color(WHITE)
+        .scale(0.6)
+    )
+
+    k_text = MathTex(r'k =').set_color(WHITE).move_to(sigma_text.get_center())
+    k_text.shift(DOWN*0.4)
+
+    k_value_text = always_redraw(
+        lambda: DecimalNumber(num_decimal_places=2)
+        .set_value(k.get_value())
+        .next_to(k_text, RIGHT, buff=0.2)
+        .set_color(WHITE)
+        .scale(0.6)
+    )
+
+    base_text = MathTex(r'\longleftarrow \text{Out of the money}\quad\text{ATM}\quad\text{In the money} \longrightarrow').next_to(ax, DOWN, buff=0.2).scale(0.35).set_color_by_gradient(RED,GREEN)
+    base_text.shift(LEFT*0.15)
+
+
+    exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_E).move_to(k_text)
+    exp1.shift(LEFT*2,DOWN)
+    exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_E).shift(DOWN*0.2,RIGHT*0.3)
+    exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
+
+    self.play(Write(ax), Write(sigma_text), Write(sigma_value_text), Write(k_text), Write(k_value_text), Write(base_text))
+    self.play(Create(curve))
+
+    self.play(sigma.animate.set_value(0.5),k.animate.set_value(0.2), run_time=1, rate_func=rate_functions.smooth)
+    self.wait(0.5)
+    self.play(sigma.animate.set_value(1.5),k.animate.set_value(5), run_time=1.5, rate_func=rate_functions.smooth)
+    self.wait(0.5)
+    self.play(sigma.animate.set_value(1),k.animate.set_value(1), run_time=1.5, rate_func=rate_functions.smooth)
+
+    self.play(Uncreate(curve),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
+
+    func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED)
+    func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_E)
+    func3 =  ax.plot(lambda x: PDF_normal(x, 0, 1.5, 5)).set_color(YELLOW)
+
+    self.play(Write(exp1),Create(func1),Write(exp2),Create(func2),Write(exp3),Create(func3))
+
+    grupoVega = Group(title_vega, graphGroup, sigma_text, k_text, base_text, exp1,exp2,exp3, func1,func2,func3)
+
+    framebox_vega = always_redraw(lambda: SurroundingRectangle(grupoVega, buff = .1))
+
+    self.play(Write(framebox_vega))
+    self.play(grupoVega.animate.scale(0.265).shift(LEFT*5.5, UP*0.5))
+    sigma_value_text.remove()
+    k_value_text.remove()
+    global vegagroup
+    vegagroup = Group(grupoVega,framebox_vega)
+    self.wait()
 
 def theta(self):
     """
@@ -65,7 +160,7 @@ def theta(self):
     # Create a LaTeX template for the title:
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-    title_theta = Tex(r'\underline{$\theta$ - Time decay:}', tex_template=myTemplate, font_size=40).next_to(curve_1, UP)
+    title_theta = Tex(r'\underline{$\theta$ - How does time decay affect our options?}', tex_template=myTemplate, font_size=40).next_to(curve_1, UP)
 
     # Define three vertical lines (Days remaining until expiration)
     line_1 = ax.get_vertical_line(ax.i2gp(30, curve_1), color=BLUE_C)
@@ -80,13 +175,14 @@ def theta(self):
     # We create and show a Vector Group with all our elements 
     # to be able to move it around the screen:
     theta = VGroup(title_theta, line_1, line_2, line_3, ax, graph, dot_1, dot_2, moving_dot)
-    theta.scale(0.7)
-    self.play(FadeIn(theta))
+    theta.move_to(RIGHT).scale(0.8)
+    self.play(Write(title_theta))
+    self.play(FadeIn(line_1, line_2, line_3, ax, graph, dot_1, dot_2, moving_dot))
 
     # We zoom in into the orange dot:
     self.play(self.camera.frame.animate.scale(0.5).move_to(moving_dot))
 
-    # Updater function to follow the dot with the camera:
+    # Updater to follow the dot with the camera:
     def update_curve(mob):
         mob.move_to(moving_dot.get_center())
 
@@ -99,10 +195,51 @@ def theta(self):
     self.wait(0.25)
 
     # We draw a frame around our VGroup:
-    framebox1 = always_redraw(lambda: SurroundingRectangle(theta, buff = .1))
-    self.play(Write(framebox1))
+    framebox_theta = always_redraw(lambda: SurroundingRectangle(theta, buff = .1))
+    self.play(Write(framebox_theta))
 
     # We move everything into the left down corner:
-    self.play(theta.animate.scale(0.2).shift(LEFT*5.5,DOWN*3))
-    self.wait(3) 
+    self.play(theta.animate.scale(0.2).shift(LEFT*6.5, DOWN))
 
+    global thetagroup
+    thetagroup = Group(theta, framebox_theta)
+
+    self.wait() 
+
+def rho(self):
+    myTemplate = TexTemplate()
+    myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
+    title_rho = Tex(r'\underline{$\rho$ - How risk-free rate of interest affects our options?}', tex_template=myTemplate, font_size=40).move_to(UP)
+    
+    eq1 = Tex(r'$\rho = \pm K\ t e^{-rt} N(\pm d2)$', tex_template=myTemplate, font_size=40)
+    eq2 = Tex(r'where: $d1 = \dfrac{ln(\frac{S}{K}) + (r+\frac{\sigma^2}{2})t}{\sigma \sqrt{t}};$', tex_template=myTemplate, font_size=40).move_to(DOWN)
+    eq3 = Tex(r'$d2 = d1 - \sigma \sqrt{t}$').move_to(DOWN*2)
+    
+    grho = Group(title_rho,eq1,eq2,eq3).scale(0.7).move_to(UP)
+
+    self.play(Write(title_rho))
+    self.play(Write(eq1))
+    self.play(Write(eq2))
+    self.play(Write(eq3))
+
+    framebox_rho = always_redraw(lambda: SurroundingRectangle(grho, buff = .1))
+    self.play(Write(framebox_rho))
+    self.play(grho.animate.scale(0.3).shift(LEFT*5.5,DOWN*4))
+
+    global rhogroup
+    rhogroup = Group(grho, framebox_rho)
+
+    self.wait()
+
+def box_all(self):
+    boxGroup = Group(dg,vegagroup,thetagroup,rhogroup)
+    fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .1, corner_radius=0.1, color=BLUE_C))
+    self.play(Write(fba))
+
+    self.play(boxGroup.animate.shift(RIGHT*5))
+    self.wait()
+
+    self.play(boxGroup.animate.scale(0), run_time=0.2)
+
+def PDF_normal(x, mu, sigma,k):
+    return exp(-(((k*x)-mu)**2)/(2*sigma**2))/(sigma*sqrt(2*pi))
