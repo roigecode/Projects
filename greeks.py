@@ -1,6 +1,7 @@
 from math import *
 from manim import *
 from manim.utils import scale, tex_templates
+from numpy import array
 
 class MainFunction(MovingCameraScene):
     def construct(self):
@@ -79,7 +80,7 @@ def vega(self):
 
     # We draw our PDF function:
     curve = always_redraw(lambda: ax.plot(
-        lambda x: PDF_normal(x, 0, sigma.get_value(), k.get_value())).set_color(WHITE)
+        lambda x: PDF_normal(x, 0, sigma.get_value(), k.get_value())).set_color(BLUE_C)
     )
 
     # We group the axes and the curve to scale them both
@@ -121,18 +122,6 @@ def vega(self):
     self.play(Write(ax), Write(sigma_text), Write(sigma_value_text), Write(k_text), Write(k_value_text), Write(base_text))
     self.play(Create(curve))
 
-    # Change sigma and k values (updaters):
-    self.play(sigma.animate.set_value(0.5),k.animate.set_value(0.2), run_time=1, rate_func=rate_functions.smooth)
-    self.wait(0.5)
-    self.play(sigma.animate.set_value(1.5),k.animate.set_value(5), run_time=1.5, rate_func=rate_functions.smooth)
-    self.wait(0.5)
-    self.play(sigma.animate.set_value(1),k.animate.set_value(1), run_time=1.5, rate_func=rate_functions.smooth)
-
-    # Remove from screen the curve and values:
-    self.play(Uncreate(curve),FadeOut(sigma_text),FadeOut(k_text),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
-    graphGroup.remove()
-    curve.remove()
-
     # Functions to explain how time until expiration affects vega:
     func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED)
     func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_C)
@@ -144,11 +133,23 @@ def vega(self):
     exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_C).shift(DOWN*0.2,RIGHT*0.3)
     exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
 
+    # Change sigma and k values (updaters):
+    self.play(sigma.animate.set_value(0.5),k.animate.set_value(0.2), run_time=1, rate_func=rate_functions.smooth)
+    self.wait(0.5)
+    self.play(sigma.animate.set_value(1.5),k.animate.set_value(5), run_time=1, rate_func=rate_functions.smooth)
+    self.wait(0.5)
+    self.play(sigma.animate.set_value(1),k.animate.set_value(1), run_time=1, rate_func=rate_functions.smooth)
+
+    # Remove from screen the curve and values:
+    self.play(FadeOut(sigma_text),FadeOut(k_text),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
+    graphGroup.remove()
+    curve.remove()
+
     # We group everything so we are able to move it around:
     provGroup = Group(ax,exp1,exp2,exp3,func1,func2,func3,base_text)
 
     # We display the three functions:
-    self.play(Write(exp1),Create(func1),Write(exp2),Create(func2),Write(exp3),Create(func3))
+    self.play(Write(exp1),Create(func1),FadeOut(curve),FadeIn(func2),FadeIn(exp2),Write(exp3),Create(func3), run_time=1.5)
     self.play(provGroup.animate.shift(UP*1))
 
     # Group everything to framebox it:
@@ -162,7 +163,7 @@ def vega(self):
     k_text.remove()
     sigma_value_text.remove()
     k_value_text.remove()
-    curve.remove()
+    
     
     # We declare a new global group to be able to access it from: def box_all(self):
     global vegagroup
@@ -262,7 +263,7 @@ def rho(self):
 
 def box_all(self):
     boxGroup = Group(dg,vegagroup,thetagroup,rhogroup)
-    fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .3, corner_radius=0.1, color=BLUE_C))
+    fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .3, corner_radius=0.1).set_color_by_gradient(PURPLE_C,PINK,BLUE_C))
     self.play(Write(fba))
 
     self.play(boxGroup.animate.shift(RIGHT*5,DOWN*0.8))
@@ -275,9 +276,6 @@ def box_all(self):
         svg.shift(element.get_center()).scale(0.5)
         self.play(FadeOut(element),Write(svg), run_time = 0.5)
 
-    self.play(Unwrite(fba))
-    boxGroup.remove()
-    fba.remove()
     self.wait()
 
 def PDF_normal(x, mu, sigma,k):
