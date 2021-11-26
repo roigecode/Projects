@@ -263,7 +263,7 @@ def box_all(self):
     fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .3, corner_radius=0.1, color=BLUE_C))
     self.play(Write(fba))
 
-    self.play(boxGroup.animate.shift(RIGHT*5,DOWN))
+    self.play(boxGroup.animate.shift(RIGHT*5,DOWN*0.8))
     self.wait()
 
     svg = SVGMobject("media/images/greeks/youtube.svg") 
