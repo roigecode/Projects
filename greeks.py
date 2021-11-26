@@ -95,7 +95,7 @@ def vega(self):
         lambda: DecimalNumber(num_decimal_places=2)
         .set_value(sigma.get_value())
         .next_to(sigma_text, RIGHT, buff=0.2)
-        .set_color(WHITE)
+        .set_color_by_gradient(PINK,ORANGE)
         .scale(0.6)
     )
 
@@ -107,9 +107,11 @@ def vega(self):
         lambda: DecimalNumber(num_decimal_places=2)
         .set_value(k.get_value())
         .next_to(k_text, RIGHT, buff=0.2)
-        .set_color(WHITE)
+        .set_color_by_gradient(PINK,ORANGE)
         .scale(0.6)
     )
+
+    gText = Group(k_text,sigma_text).set_color_by_gradient(PURPLE_C, PINK)
 
     # Text displayed in the base with a cool color gradient:
     base_text = MathTex(r'\longleftarrow \text{Out of the money}\quad\text{ATM}\quad\text{In the money} \longrightarrow').next_to(ax, DOWN, buff=0.2).scale(0.35).set_color_by_gradient(PURPLE_C,PINK,ORANGE)
@@ -274,6 +276,7 @@ def box_all(self):
         self.play(FadeOut(element),Write(svg), run_time = 0.5)
 
     self.play(Unwrite(fba))
+    boxGroup.remove()
     fba.remove()
     self.wait()
 
