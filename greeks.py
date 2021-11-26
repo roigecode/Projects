@@ -11,6 +11,7 @@ class MainFunction(MovingCameraScene):
         theta(self)
         rho(self)
         box_all(self)
+        self.wait()
 
 def delta(self):
     pass
@@ -22,11 +23,11 @@ def delta_gamma(self):
     """
     This method simply displays the image of Delta and Gamma.
     """
-    
+
     # Create a LaTeX template for the title:
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-    title_delta = Tex(r'\underline{$\Delta$ \& $\Gamma$ - Why does the value of our options change?}', tex_template=myTemplate, font_size=40).move_to(UP*2)
+    title_delta = Tex(r'\underline{$\Delta$ \& $\Gamma$ - How does the value of our options change?}', tex_template=myTemplate, font_size=40).move_to(UP*2)
 
     # We create the image object and display it:
     image_delta = ImageMobject("media/images/theta_time_decay/delta_explained.png")
@@ -102,13 +103,12 @@ def vega(self):
         .scale(0.6)
     )
 
-    base_text = MathTex(r'\longleftarrow \text{Out of the money}\quad\text{ATM}\quad\text{In the money} \longrightarrow').next_to(ax, DOWN, buff=0.2).scale(0.35).set_color_by_gradient(RED,GREEN)
+    base_text = MathTex(r'\longleftarrow \text{Out of the money}\quad\text{ATM}\quad\text{In the money} \longrightarrow').next_to(ax, DOWN, buff=0.2).scale(0.35).set_color_by_gradient(PURPLE_C,PINK,ORANGE)
     base_text.shift(LEFT*0.15)
 
-
     exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_E).move_to(k_text)
-    exp1.shift(LEFT*2,DOWN)
-    exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_E).shift(DOWN*0.2,RIGHT*0.3)
+    exp1.shift(LEFT*1.5,DOWN)
+    exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_C).shift(DOWN*0.2,RIGHT*0.3)
     exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
 
     self.play(Write(ax), Write(sigma_text), Write(sigma_value_text), Write(k_text), Write(k_value_text), Write(base_text))
@@ -120,22 +120,33 @@ def vega(self):
     self.wait(0.5)
     self.play(sigma.animate.set_value(1),k.animate.set_value(1), run_time=1.5, rate_func=rate_functions.smooth)
 
-    self.play(Uncreate(curve),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
+    self.play(Uncreate(curve),FadeOut(sigma_text),FadeOut(k_text),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
+    graphGroup.remove()
+    curve.remove()
 
     func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED)
-    func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_E)
+    func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_C)
     func3 =  ax.plot(lambda x: PDF_normal(x, 0, 1.5, 5)).set_color(YELLOW)
 
-    self.play(Write(exp1),Create(func1),Write(exp2),Create(func2),Write(exp3),Create(func3))
+    provGroup = Group(ax,exp1,exp2,exp3,func1,func2,func3,base_text)
 
-    grupoVega = Group(title_vega, graphGroup, sigma_text, k_text, base_text, exp1,exp2,exp3, func1,func2,func3)
+    
+    self.play(Write(exp1),Create(func1),Write(exp2),Create(func2),Write(exp3),Create(func3))
+    self.play(provGroup.animate.shift(UP*1))
+
+    grupoVega = Group(title_vega, provGroup, ax)
 
     framebox_vega = always_redraw(lambda: SurroundingRectangle(grupoVega, buff = .1))
 
     self.play(Write(framebox_vega))
     self.play(grupoVega.animate.scale(0.265).shift(LEFT*5.5, UP*0.5))
+
+    sigma_text.remove()
+    k_text.remove()
     sigma_value_text.remove()
     k_value_text.remove()
+    curve.remove()
+    
     global vegagroup
     vegagroup = Group(grupoVega,framebox_vega)
     self.wait()
@@ -175,7 +186,7 @@ def theta(self):
     # We create and show a Vector Group with all our elements 
     # to be able to move it around the screen:
     theta = VGroup(title_theta, line_1, line_2, line_3, ax, graph, dot_1, dot_2, moving_dot)
-    theta.move_to(RIGHT).scale(0.8)
+    theta.move_to(RIGHT).scale(0.7)
     self.play(Write(title_theta))
     self.play(FadeIn(line_1, line_2, line_3, ax, graph, dot_1, dot_2, moving_dot))
 
@@ -199,7 +210,7 @@ def theta(self):
     self.play(Write(framebox_theta))
 
     # We move everything into the left down corner:
-    self.play(theta.animate.scale(0.2).shift(LEFT*6.5, DOWN))
+    self.play(theta.animate.scale(0.2).shift(LEFT*6.5,DOWN*0.1))
 
     global thetagroup
     thetagroup = Group(theta, framebox_theta)
@@ -224,7 +235,7 @@ def rho(self):
 
     framebox_rho = always_redraw(lambda: SurroundingRectangle(grho, buff = .1))
     self.play(Write(framebox_rho))
-    self.play(grho.animate.scale(0.3).shift(LEFT*5.5,DOWN*4))
+    self.play(grho.animate.scale(0.3).shift(LEFT*5.5,DOWN*2.5))
 
     global rhogroup
     rhogroup = Group(grho, framebox_rho)
@@ -233,13 +244,22 @@ def rho(self):
 
 def box_all(self):
     boxGroup = Group(dg,vegagroup,thetagroup,rhogroup)
-    fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .1, corner_radius=0.1, color=BLUE_C))
+    fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .3, corner_radius=0.1, color=BLUE_C))
     self.play(Write(fba))
 
     self.play(boxGroup.animate.shift(RIGHT*5))
     self.wait()
 
-    self.play(boxGroup.animate.scale(0), run_time=0.2)
+    svg = SVGMobject("media/images/greeks/youtube.svg") 
+
+    for element in boxGroup:
+        svg = SVGMobject("media/images/greeks/youtube.svg")
+        svg.shift(element.get_center()).scale(0.5)
+        self.play(FadeOut(element),Write(svg), run_time = 0.5)
+
+    self.play(Unwrite(fba))
+    fba.remove()
+    self.wait()
 
 def PDF_normal(x, mu, sigma,k):
     return exp(-(((k*x)-mu)**2)/(2*sigma**2))/(sigma*sqrt(2*pi))
