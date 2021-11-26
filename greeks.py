@@ -47,13 +47,16 @@ def delta_gamma(self):
     self.wait()
 
 def vega(self):
-
+    """
+    This method plots all the equations and graphics related to Vega and Implied Volatility.
+    """
     # Create title and first equation:
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
     title_vega = Tex(r'\underline{$\nu$ - How does IV affect our options?}', tex_template=myTemplate, font_size=40).move_to(UP)
     eq_vega = Tex(r'$\nu = \dfrac{\partial V}{\partial \sigma}$', tex_template=myTemplate, font_size=40)
 
+    # Plot them:
     self.play(Write(title_vega))
     self.play(Write(eq_vega))
     self.wait(0.5)
@@ -68,22 +71,26 @@ def vega(self):
             axis_config = {'include_numbers':False}
         )
 
-    # Initialize mu (distribution mean) and sigma (standard deviation) ValueTracker to 0 and 1
+    # Initialize mu (distribution mean) = 0, we will not use it
+    # and sigma (standard deviation) + k (ValueTrackers) to 0 and 1:
     mu = ValueTracker(0)
     sigma = ValueTracker(1)
     k = ValueTracker(1)
 
+    # We draw our PDF function:
     curve = always_redraw(lambda: ax.plot(
         lambda x: PDF_normal(x, 0, sigma.get_value(), k.get_value())).set_color(WHITE)
     )
 
+    # We group the axes and the curve to scale them both
     graphGroup = Group(ax,curve)
     graphGroup.scale(0.5)
 
-    # Text to display distrubtion mean
+    # Text to display distrubtion mean (sigma):
     sigma_text = MathTex(r'\sigma =').next_to(ax, UP*4, buff=0.2).set_color(WHITE)
     sigma_text.shift(LEFT*0.4)
 
+    # Decimal number with redraw updater:
     sigma_value_text = always_redraw(
         lambda: DecimalNumber(num_decimal_places=2)
         .set_value(sigma.get_value())
@@ -92,6 +99,7 @@ def vega(self):
         .scale(0.6)
     )
 
+    # Idem but for 'k':
     k_text = MathTex(r'k =').set_color(WHITE).move_to(sigma_text.get_center())
     k_text.shift(DOWN*0.4)
 
@@ -103,50 +111,58 @@ def vega(self):
         .scale(0.6)
     )
 
+    # Text displayed in the base with a cool color gradient:
     base_text = MathTex(r'\longleftarrow \text{Out of the money}\quad\text{ATM}\quad\text{In the money} \longrightarrow').next_to(ax, DOWN, buff=0.2).scale(0.35).set_color_by_gradient(PURPLE_C,PINK,ORANGE)
     base_text.shift(LEFT*0.15)
 
-    exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_E).move_to(k_text)
-    exp1.shift(LEFT*1.5,DOWN)
-    exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_C).shift(DOWN*0.2,RIGHT*0.3)
-    exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
-
+    # Display some things:
     self.play(Write(ax), Write(sigma_text), Write(sigma_value_text), Write(k_text), Write(k_value_text), Write(base_text))
     self.play(Create(curve))
 
+    # Change sigma and k values (updaters):
     self.play(sigma.animate.set_value(0.5),k.animate.set_value(0.2), run_time=1, rate_func=rate_functions.smooth)
     self.wait(0.5)
     self.play(sigma.animate.set_value(1.5),k.animate.set_value(5), run_time=1.5, rate_func=rate_functions.smooth)
     self.wait(0.5)
     self.play(sigma.animate.set_value(1),k.animate.set_value(1), run_time=1.5, rate_func=rate_functions.smooth)
 
+    # Remove from screen the curve and values:
     self.play(Uncreate(curve),FadeOut(sigma_text),FadeOut(k_text),FadeOut(sigma_value_text), FadeOut(k_value_text), run_time=0.25)
     graphGroup.remove()
     curve.remove()
 
+    # Functions to explain how time until expiration affects vega:
     func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED)
     func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_C)
     func3 =  ax.plot(lambda x: PDF_normal(x, 0, 1.5, 5)).set_color(YELLOW)
 
+    # Legend of the functions above:
+    exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_E).move_to(k_text)
+    exp1.shift(LEFT*1.5,DOWN)
+    exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_C).shift(DOWN*0.2,RIGHT*0.3)
+    exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
+
+    # We group everything so we are able to move it around:
     provGroup = Group(ax,exp1,exp2,exp3,func1,func2,func3,base_text)
 
-    
+    # We display the three functions:
     self.play(Write(exp1),Create(func1),Write(exp2),Create(func2),Write(exp3),Create(func3))
     self.play(provGroup.animate.shift(UP*1))
 
+    # Group everything to framebox it:
     grupoVega = Group(title_vega, provGroup, ax)
-
     framebox_vega = always_redraw(lambda: SurroundingRectangle(grupoVega, buff = .1))
-
     self.play(Write(framebox_vega))
     self.play(grupoVega.animate.scale(0.265).shift(LEFT*5.5, UP*0.5))
 
+    # Remove the things -> otherwise visual bugs appear because of grouping:
     sigma_text.remove()
     k_text.remove()
     sigma_value_text.remove()
     k_value_text.remove()
     curve.remove()
     
+    # We declare a new global group to be able to access it from: def box_all(self):
     global vegagroup
     vegagroup = Group(grupoVega,framebox_vega)
     self.wait()
@@ -247,7 +263,7 @@ def box_all(self):
     fba = always_redraw(lambda: SurroundingRectangle(boxGroup, buff = .3, corner_radius=0.1, color=BLUE_C))
     self.play(Write(fba))
 
-    self.play(boxGroup.animate.shift(RIGHT*5))
+    self.play(boxGroup.animate.shift(RIGHT*5,DOWN))
     self.wait()
 
     svg = SVGMobject("media/images/greeks/youtube.svg") 
