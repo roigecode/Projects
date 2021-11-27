@@ -123,12 +123,12 @@ def vega(self):
     self.play(Create(curve))
 
     # Functions to explain how time until expiration affects vega:
-    func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED)
+    func1 =  ax.plot(lambda x: PDF_normal(x, 0, 0.5, 0.2)).set_color(RED_C)
     func2 =  ax.plot(lambda x: PDF_normal(x, 0, 1, 1)).set_color(BLUE_C)
-    func3 =  ax.plot(lambda x: PDF_normal(x, 0, 1.5, 5)).set_color(YELLOW)
+    func3 =  ax.plot(lambda x: PDF_normal(x, 0, 1.5, 5)).set_color(YELLOW_C)
 
     # Legend of the functions above:
-    exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_E).move_to(k_text)
+    exp1 = Tex(r'30 days till expiration').scale(0.4).set_color(RED_C).move_to(k_text)
     exp1.shift(LEFT*1.5,DOWN)
     exp2 = Tex(r'15 days').move_to(exp1.get_left()).scale(0.4).set_color(BLUE_C).shift(DOWN*0.2,RIGHT*0.3)
     exp3 = Tex(r'5 days').move_to(exp1.get_left()).scale(0.4).set_color(YELLOW_C).shift(DOWN*0.4,RIGHT*0.25)
@@ -229,7 +229,7 @@ def theta(self):
     self.play(Write(framebox_theta))
 
     # We move everything into the left down corner:
-    self.play(theta.animate.scale(0.2).shift(LEFT*6.5,DOWN*0.1))
+    self.play(theta.animate.scale(0.2).shift(LEFT*6.5,DOWN*0.2))
 
     global thetagroup
     thetagroup = Group(theta, framebox_theta)
