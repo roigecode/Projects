@@ -1,5 +1,5 @@
 from manim import *
-from math import sqrt, exp, pi, erfc
+from math import sqrt, exp, pi, erf
 from manim.mobject.mobject import T
 from manim.utils import scale
 import csv
@@ -86,8 +86,11 @@ class MainFunction(MovingCameraScene):
         alt5 = MathTex(r'= 0.682689...').move_to(RIGHT*2.75)
         alt6 = MathTex(r'\approx 68\%').move_to(RIGHT*2)
 
+        l00 = ax.get_vertical_line(ax.input_to_graph_point(-1,curve), color= WHITE)
+        l01 = ax.get_vertical_line(ax.input_to_graph_point(1,curve), color= WHITE)
+
         tvg = VGroup(let,kt,mt,st).move_to(RIGHT).scale(0.5)
-        vg.add(mu,sigma1,sigma2,sigma3,sigma4,sigma5,sigma6)
+        vg.add(mu,sigma1,sigma2,sigma3,sigma4,sigma5,sigma6, l00,l01)
 
         self.play(Write(t1))
         self.wait(0.75)
@@ -97,7 +100,7 @@ class MainFunction(MovingCameraScene):
         self.play(FadeOut(t1[1]), FadeOut(t1[3]), t1[2].animate.move_to(center_dot.get_center()), t1[0].animate.shift(RIGHT*4),t1[4].animate.shift(LEFT*4))
 
         self.play(Write(ax))
-        self.play(Write(curve), Write(mu), Write(sigma1), Write(sigma2), Write(sigma3), Write(sigma4), Write(sigma5), Write(sigma6))
+        self.play(Write(curve), Write(mu), Write(sigma1), Write(sigma2), Write(sigma3), Write(sigma4), Write(sigma5), Write(sigma6), Write(l00), Write(l01))
         self.wait(1)
         self.play(FadeOut(vg))
         self.play(Write(t3))
@@ -110,7 +113,7 @@ class MainFunction(MovingCameraScene):
         self.wait(0.5)
         self.play(TransformMatchingTex(t2Mid,t2Final, key_map={"e^{-\frac{(1x - 0)^2}{2\cdot 1^2}}":"e^{-\frac{x^2}{2}}","\sqrt{2 \pi}":"\sqrt{2 \pi}"}, transform_mismatches=True))
         self.play(Write(iex))
-        self.wait(0.5)
+    
         self.play(FadeOut(tvg), TransformMatchingTex(t2Final,t2Int, transform_mismatches=True), FadeOut(t3), iex.animate.shift(UP*3))
         self.wait(0.5)
         self.play(TransformMatchingTex(t2Int, t2Int2, key_map={"1":"1","-1":"-1"},transform_mismatches=True))
@@ -229,38 +232,49 @@ class MainFunction(MovingCameraScene):
             x_length = 3,
             y_length = 1,
             tips=False,
-            axis_config = {'include_numbers':True}
+            axis_config = {'include_numbers':False}
         )
 
-        erf = ax2.plot(lambda x: 1-erfc(x), x_range=[0.01,3])
+        erf = ax2.plot(lambda x: erf(x), x_range=[0,3])
         erf.set_color_by_gradient([YELLOW,GREEN,BLUE])
 
         erfg = VGroup(erf,ax2).scale(2)
 
         t = ValueTracker(0)
 
-        initial_point= [ax2.coords_to_point(t.get_value(), erf(t.get_value()))]
+        md = Dot(ax2.coords_to_point(0,0)).scale(0.7)
+        md.add_updater(lambda x: x.move_to(ax2.c2p(t.get_value(), erf(t.get_value()))))
 
-        md = Dot(point=initial_point, radius=0.5)
-        md.add_updater(lambda x: x.move_to(ax.c2p(t.get_value(), erf(t.get_value()))))
-
-        xt = Tex(r"x = ").move_to(DOWN)
-        xt.shift(LEFT)
+        xt = Tex(r"$\sigma$ = x = ").move_to(DOWN*2).scale(0.7)
+        xt.shift(LEFT*2)
         xt_value_text = always_redraw(
-            lambda: DecimalNumber(num_decimal_places=2)
+            lambda: DecimalNumber(num_decimal_places=5)
             .set_value(t.get_value())
-            .next_to(xt, RIGHT, buff=0.2)
+            .next_to(xt, RIGHT, buff=0.1)
+            .scale(0.7)
         )
 
-        yt = Tex(r"y = ").move_to(DOWN)
-        yt.shift(RIGHT)
+        yt = Tex(r"y = ").move_to(DOWN*2).scale(0.7)
+        yt.shift(RIGHT*2)
         yt_value_text = always_redraw(
-            lambda: DecimalNumber(num_decimal_places=2)
+            lambda: DecimalNumber(num_decimal_places=5)
             .set_value(erf(t.get_value()))
-            .next_to(yt, RIGHT, buff=0.2)
+            .next_to(yt, RIGHT, buff=0.1)
+            .scale(0.7)
         )
 
-        tef = Tex(r"To sum everything up, let's just have a quick look at the ",r"Gaussian error function",r":").move_to(UP*2.5)
+        sef = MathTex(r'\text{erf(}\frac{\sigma}{\sqrt{2}}\text{)} = ').move_to(DOWN*3)
+        sef_value_text = always_redraw(
+            lambda: DecimalNumber(num_decimal_places=5)
+            .set_value(erf(t.get_value())/sqrt(2))
+            .next_to(sef, RIGHT, buff=0.1)
+            .scale(0.7)
+        )
+        
+        sefG = VGroup(sef, sef_value_text)
+        ss = SurroundingRectangle(sefG).set_color_by_gradient([BLUE_C,GREEN_C])
+
+        tef = Tex(r"To sum up, let's just have a quick look at the ",r"Gaussian error function",r":", font_size=30).move_to(UP*2.5)
         tef[1].set_color_by_gradient([YELLOW,GREEN,BLUE])
         self.play(Write(tef))
         self.play(Uncreate(sr2), FadeOut(eqfin))
@@ -268,13 +282,22 @@ class MainFunction(MovingCameraScene):
 
         self.wait(0.5)
         self.play(t.animate.set_value(1))
+        self.play(Write(ss))
+        self.wait(0.5)
+        self.play(Uncreate(ss))
         self.wait(0.5)
         self.play(t.animate.set_value(2))
+        self.play(Write(ss))
+        self.wait(0.5)
+        self.play(Uncreate(ss))
         self.wait(0.5)
         self.play(t.animate.set_value(3))
+        self.play(Write(ss))
+        self.wait(0.5)
+        self.play(Uncreate(ss))
         self.wait(0.5)
 
-        self.play(Unwrite(tef), Uncreate(ax2), Uncreate(erf), Unwrite(md), Unwrite(xt), Unwrite(yt), Unwrite(xt_value_text), Unwrite(yt_value_text))
+        self.play(Unwrite(tef), Uncreate(ax2), Uncreate(erf), Unwrite(md), Unwrite(xt), Unwrite(yt), Unwrite(xt_value_text), Unwrite(yt_value_text), Unwrite(sef), Unwrite(sef_value_text))
 
         sq = Square(side_length=1, color=WHITE, fill_opacity=0.5).move_to(DOWN*0.2).scale(0.25)
         sq.shift(RIGHT).set_color_by_gradient([PURPLE_C,WHITE])
