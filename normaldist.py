@@ -190,7 +190,7 @@ class MainFunction(MovingCameraScene):
         self.play(
         FadeOut(textf3), textf4.animate.shift(UP*5.5), FadeOut(ax), FadeOut(curve), FadeOut(fivg1),
         FadeOut(sigma1),FadeOut(sigma2),FadeOut(sigma3),FadeOut(sigma4),FadeOut(sigma5),FadeOut(sigma6),
-        FadeOut(l1), FadeOut(l2)
+        FadeOut(l1), FadeOut(l2), FadeOut(mu), FadeOut(l00), FadeOut(l01)
         )
 
         sr3 = SurroundingRectangle(eqfin).set_color_by_gradient([YELLOW,PINK,PURPLE])
@@ -200,7 +200,7 @@ class MainFunction(MovingCameraScene):
         self.play(eqfin.animate.shift(DOWN*4))
         self.wait(0.5)
 
-        self.play(TransformMatchingTex(eqfin,eqfin1,transform_mismatches=True),Write(ax),Write(sigma1),Write(sigma2),Write(sigma3),Write(sigma4),Write(sigma5),Write(sigma6),Write(curve),Write(l1), Write(l2), Create(area1))
+        self.play(TransformMatchingTex(eqfin,eqfin1,transform_mismatches=True),Write(ax),Write(sigma1),Write(sigma2),Write(sigma3),Write(sigma4),Write(sigma5),Write(sigma6),Write(curve),Write(l1), Write(l2), Create(area1), rate_func=linear)
         self.wait(1)
         self.play(Uncreate(l1), Uncreate(l2), Uncreate(area1))
 
@@ -210,7 +210,7 @@ class MainFunction(MovingCameraScene):
         sigma3.animate.set_color(GREEN_C),
         sigma4.animate.set_color(GREEN_C),
         TransformMatchingTex(eqfin1,eqfin2,transform_mismatches=True), 
-        Write(l3),Write(l4), Create(area2))
+        Write(l3),Write(l4), Create(area2), rate_func=linear)
 
         self.wait(1)
         self.play(Uncreate(l3), Uncreate(l4), Uncreate(area2))
@@ -219,7 +219,7 @@ class MainFunction(MovingCameraScene):
         sigma4.animate.set_color(WHITE),
         sigma5.animate.set_color(RED_C),
         sigma6.animate.set_color(RED_C),
-        TransformMatchingTex(eqfin2,eqfin3,transform_mismatches=True),Create(l5),Create(l6),Create(area3))
+        TransformMatchingTex(eqfin2,eqfin3,transform_mismatches=True),Create(l5),Create(l6),Create(area3), rate_func=linear)
         self.wait()
 
         eqfin.set_color(WHITE)
@@ -278,7 +278,7 @@ class MainFunction(MovingCameraScene):
         )
         
         sefG = VGroup(sef, sef_value_text)
-        ss = SurroundingRectangle(sefG).set_color(ORANGE)
+        ss = always_redraw(lambda: SurroundingRectangle(sefG).set_color(ORANGE))
 
         tef = Tex(r"To sum up, let's just have a quick look at the ",r"Gaussian error function",r":", font_size=30).move_to(UP*2.5)
         tef[1].set_color_by_gradient([YELLOW,GREEN,BLUE])
