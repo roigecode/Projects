@@ -28,7 +28,7 @@ class MainFunction(MovingCameraScene):
         self.wait()
         self.play(FadeOut(t0))
 
-        t1 = Tex(r"¿",r"Why when we sell a first standard deviation $(1 \sigma)$ option we have a ",r"68\%",r" POP",r"?", font_size=25)
+        t1 = Tex(r"¿",r"Why is the percentage value within one standard deviation $(1 \sigma)$ range ",r"68\%",r"?", font_size=25)
         t1[2].set_color(PURE_GREEN)
 
         t2 = MathTex(r'\dfrac{e^{-\frac{(kx - \mu)^2}{2 \sigma^2}}}{\sigma \sqrt{2 \pi}}')
@@ -49,7 +49,6 @@ class MainFunction(MovingCameraScene):
         sigma4 = MathTex(r'-2 \sigma', font_size = 20)
         sigma5 = MathTex(r'3 \sigma', font_size = 20)
         sigma6 = MathTex(r'-3 \sigma', font_size = 20)
-
 
         mu.move_to(ax.coords_to_point(0,0))
         mu.shift(DOWN*0.3)
@@ -72,7 +71,7 @@ class MainFunction(MovingCameraScene):
         st = MathTex(r'\sigma = 1').move_to(DOWN*0.75)
 
         iex = Tex(r'When we integrate a PDF we get the probability as the area bellow the bounded curve. We will rewrite our expression as:',font_size=25).move_to(DOWN*1.5)
-        iex2 = Tex(r'Our limits of integration are -1 \& 1 because we want to know the POP at $1\sigma$',font_size=25).move_to(DOWN*1.5)
+        iex2 = Tex(r'Our limits of integration are -1 \& 1 because we want to know the value at $1\sigma$',font_size=25).move_to(DOWN*1.5)
         iex3 = Tex(r'Substitute $u = \dfrac{x}{\sqrt{2}}$ then $\dfrac{du}{dx} = \dfrac{1}{\sqrt{2}} \, \therefore\, dx = \sqrt{2}\, du$:', font_size=25).move_to(UP*1.5)
         iex4 = Tex(r'Undo the substitution $u = \dfrac{x}{\sqrt{2}}$:',font_size=30).move_to(DOWN*2)
         iex5 = Tex(r'Now we have $\int f(x)\, dx = F(x)$ so we need to evaluate it between our boundaries to get $\int_{-1}^{1} f(x)\, dx$:',font_size=30).move_to(DOWN*2)
@@ -97,7 +96,7 @@ class MainFunction(MovingCameraScene):
         self.play(t1.animate.move_to(UP*2.5))
 
         # Re-arrenge text:
-        self.play(FadeOut(t1[1]), FadeOut(t1[3]), t1[2].animate.move_to(center_dot.get_center()), t1[0].animate.shift(RIGHT*4),t1[4].animate.shift(LEFT*4))
+        self.play(FadeOut(t1[1]), t1[2].animate.move_to(center_dot.get_center()), t1[0].animate.shift(RIGHT*4),t1[3].animate.shift(LEFT*4))
 
         self.play(Write(ax))
         self.play(Write(curve), Write(mu), Write(sigma1), Write(sigma2), Write(sigma3), Write(sigma4), Write(sigma5), Write(sigma6), Write(l00), Write(l01))
@@ -140,7 +139,7 @@ class MainFunction(MovingCameraScene):
         self.play(alt6.animate.set_color(PURE_GREEN))
         self.wait(2)
 
-        vgP1 = VGroup(alt6,t1[0],t1[4],t1[2],t2Int2, iex5, alt4)
+        vgP1 = VGroup(alt6,t1[0],t1[3],t1[1],t2Int2, iex5, alt4)
         self.play(FadeOut(vgP1))
         textfi = Tex("But what does this all mean? Let's check it out visually!")
         self.play(Write(textfi))
@@ -154,11 +153,11 @@ class MainFunction(MovingCameraScene):
         l5 = ax.get_vertical_line(ax.input_to_graph_point(-3,curve), color= WHITE)
         l6  = ax.get_vertical_line(ax.input_to_graph_point(3,curve), color= WHITE)
 
-        textfi2 = MathTex(r"\text{We've just seen that for } 1 \sigma \text{ our POP is } \int_{-1}^{1} \dfrac{e^{-\frac{x^2}{2}}}{\sqrt{2 \pi}} dx = \text{erf(}\frac{1}{\sqrt{2}}\text{)} = 0.682689... \,\approx 68\%", font_size=30).move_to(UP*2.5)
+        textfi2 = MathTex(r"\text{We've just seen that for } 1 \sigma \text{ our value is } \int_{-1}^{1} \dfrac{e^{-\frac{x^2}{2}}}{\sqrt{2 \pi}} dx = \text{erf(}\frac{1}{\sqrt{2}}\text{)} = 0.682689... \,\approx 68\%", font_size=30).move_to(UP*2.5)
         jk = Tex(r"That's just a fancy way to say that the area bellow the curve between $\pm 1\sigma$ is ",r"$\approx 0.68$", font_size=30).move_to(DOWN*3)
         jk[1].set_color_by_gradient([BLUE_D,BLUE_C,BLUE_A])
 
-        textf3 = Tex(r"But what if we want to know the POP at $2\sigma$ or $3\sigma$?",font_size=30).move_to(UP*2.5)
+        textf3 = Tex(r"But what if we want to know it at $2\sigma$ or $3\sigma$?",font_size=30).move_to(UP*2.5)
         textf4 = Tex(r"A beautiful move is just changing the integration limits to $\pm \sigma$: $\int_{-\sigma}^{\sigma} \dfrac{e^{-\frac{x^2}{2}}}{\sqrt{2 \pi}} dx$ but an easier way is to compute: ",font_size=30).move_to(DOWN*3)
         
         eqfin = MathTex(r"\text{erf(}\frac{\sigma}{\sqrt{2}}\text{)}").move_to(UP)
