@@ -72,7 +72,7 @@ class MainFunction(MovingCameraScene):
         st = MathTex(r'\sigma = 1').move_to(DOWN*0.75)
 
         iex = Tex(r'When we integrate a PDF we get the probability as the area bellow the bounded curve. We will rewrite our expression as:',font_size=25).move_to(DOWN*1.5)
-        iex2 = Tex(r'Our limits of integration are -1 \& 1 because we want to know POP at $1\sigma$',font_size=25).move_to(DOWN*1.5)
+        iex2 = Tex(r'Our limits of integration are -1 \& 1 because we want to know the POP at $1\sigma$',font_size=25).move_to(DOWN*1.5)
         iex3 = Tex(r'Substitute $u = \dfrac{x}{\sqrt{2}}$ then $\dfrac{du}{dx} = \dfrac{1}{\sqrt{2}} \, \therefore\, dx = \sqrt{2}\, du$:', font_size=25).move_to(UP*1.5)
         iex4 = Tex(r'Undo the substitution $u = \dfrac{x}{\sqrt{2}}$:',font_size=30).move_to(DOWN*2)
         iex5 = Tex(r'Now we have $\int f(x)\, dx = F(x)$ so we need to evaluate it between our boundaries to get $\int_{-1}^{1} f(x)\, dx$:',font_size=30).move_to(DOWN*2)
@@ -142,7 +142,7 @@ class MainFunction(MovingCameraScene):
 
         vgP1 = VGroup(alt6,t1[0],t1[4],t1[2],t2Int2, iex5, alt4)
         self.play(FadeOut(vgP1))
-        textfi = Tex("But what does this all mean? Let's check it visually!")
+        textfi = Tex("But what does this all mean? Let's check it out visually!")
         self.play(Write(textfi))
         self.play(textfi.animate.shift(UP*2.5))
         self.play(FadeIn(vg))
@@ -195,7 +195,7 @@ class MainFunction(MovingCameraScene):
         self.play(eqfin.animate.shift(DOWN*4))
         self.wait(0.5)
 
-        self.play(TransformMatchingTex(eqfin,eqfin1,transform_mismatches=True),Write(ax),Write(sigma1),Write(sigma2),Write(sigma3),Write(sigma4),Write(sigma5),Write(sigma6),Write(curve),Write(l1), Write(l2), Create(area1),rate_func=rate_functions.smooth)
+        self.play(TransformMatchingTex(eqfin,eqfin1,transform_mismatches=True),Write(ax),Write(sigma1),Write(sigma2),Write(sigma3),Write(sigma4),Write(sigma5),Write(sigma6),Write(curve),Write(l1), Write(l2), Create(area1))
         self.wait(1)
         self.play(Uncreate(l1), Uncreate(l2), Uncreate(area1))
 
@@ -205,7 +205,7 @@ class MainFunction(MovingCameraScene):
         sigma3.animate.set_color(GREEN_C),
         sigma4.animate.set_color(GREEN_C),
         TransformMatchingTex(eqfin1,eqfin2,transform_mismatches=True), 
-        Write(l3),Write(l4), Create(area2),rate_func=rate_functions.smooth)
+        Write(l3),Write(l4), Create(area2))
 
         self.wait(1)
         self.play(Uncreate(l3), Uncreate(l4), Uncreate(area2))
@@ -214,7 +214,7 @@ class MainFunction(MovingCameraScene):
         sigma4.animate.set_color(WHITE),
         sigma5.animate.set_color(RED_C),
         sigma6.animate.set_color(RED_C),
-        TransformMatchingTex(eqfin2,eqfin3,transform_mismatches=True),Create(l5),Create(l6),Create(area3),rate_func=rate_functions.smooth)
+        TransformMatchingTex(eqfin2,eqfin3,transform_mismatches=True),Create(l5),Create(l6),Create(area3))
         self.wait()
 
         eqfin.set_color(WHITE)
@@ -235,10 +235,10 @@ class MainFunction(MovingCameraScene):
             axis_config = {'include_numbers':False}
         )
 
-        erf = ax2.plot(lambda x: erf(x), x_range=[0,3])
-        erf.set_color_by_gradient([YELLOW,GREEN,BLUE])
+        erf1 = ax2.plot(lambda x: erf(x), x_range=[0,3])
+        erf1.set_color_by_gradient([YELLOW,GREEN,BLUE])
 
-        erfg = VGroup(erf,ax2).scale(2)
+        erfg = VGroup(erf1,ax2).scale(2)
 
         t = ValueTracker(0)
 
@@ -263,7 +263,8 @@ class MainFunction(MovingCameraScene):
             .scale(0.7)
         )
 
-        sef = MathTex(r'\text{erf(}\frac{\sigma}{\sqrt{2}}\text{)} = ').move_to(DOWN*3)
+        sef = MathTex(r'\text{erf(}\frac{\sigma}{\sqrt{2}}\text{)} = ').move_to(DOWN*3).set_color(WHITE)
+        
         sef_value_text = always_redraw(
             lambda: DecimalNumber(num_decimal_places=5)
             .set_value(erf(t.get_value())/sqrt(2))
@@ -272,34 +273,36 @@ class MainFunction(MovingCameraScene):
         )
         
         sefG = VGroup(sef, sef_value_text)
-        ss = SurroundingRectangle(sefG).set_color_by_gradient([BLUE_C,GREEN_C])
+        ss = always_redraw(lambda: SurroundingRectangle(sefG))
 
         tef = Tex(r"To sum up, let's just have a quick look at the ",r"Gaussian error function",r":", font_size=30).move_to(UP*2.5)
         tef[1].set_color_by_gradient([YELLOW,GREEN,BLUE])
         self.play(Write(tef))
         self.play(Uncreate(sr2), FadeOut(eqfin))
-        self.play(Write(ax2), Write(erf), Write(md), Write(xt), Write(yt), Write(xt_value_text), Write(yt_value_text))
+        self.play(Write(ax2), Write(erf1), Write(md), Write(xt), Write(yt), Write(xt_value_text), Write(yt_value_text), Write(sef), Write(sef_value_text))
 
-        self.wait(0.5)
+        self.wait()
+
         self.play(t.animate.set_value(1))
         self.play(Write(ss))
-        self.wait(0.5)
+        self.wait()
         self.play(Uncreate(ss))
-        self.wait(0.5)
+  
         self.play(t.animate.set_value(2))
         self.play(Write(ss))
-        self.wait(0.5)
+        self.wait()
         self.play(Uncreate(ss))
-        self.wait(0.5)
+
         self.play(t.animate.set_value(3))
         self.play(Write(ss))
-        self.wait(0.5)
-        self.play(Uncreate(ss))
-        self.wait(0.5)
+        self.wait()
+        self.play(Uncreate(ss),Unwrite(tef), Uncreate(ax2), Uncreate(erf1), Unwrite(md), Unwrite(xt), Unwrite(yt), Unwrite(xt_value_text), Unwrite(yt_value_text), Unwrite(sef), Unwrite(sef_value_text))
+        
+        xt_value_text.remove()
+        sef_value_text.remove()
+        yt_value_text.remove()
 
-        self.play(Unwrite(tef), Uncreate(ax2), Uncreate(erf), Unwrite(md), Unwrite(xt), Unwrite(yt), Unwrite(xt_value_text), Unwrite(yt_value_text), Unwrite(sef), Unwrite(sef_value_text))
-
-        sq = Square(side_length=1, color=WHITE, fill_opacity=0.5).move_to(DOWN*0.2).scale(0.25)
+        sq = Square(side_length=1, color=WHITE, fill_opacity=0.5).move_to(DOWN*0.3).scale(0.25)
         sq.shift(RIGHT).set_color_by_gradient([PURPLE_C,WHITE])
         qed = Tex(r'Q.E.D.').set_color_by_gradient([PURPLE_C,WHITE])
         self.play(Write(qed), Create(sq))
