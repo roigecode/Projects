@@ -9,7 +9,7 @@ class MainFunction(MovingCameraScene):
     def construct(self):
         ax = Axes(
             x_range = [-4, 4, 1],
-            y_range = [0, 0.4, 0.2],
+            y_range = [0, 0.4, 0.4],
             x_length = 15,
             y_length = 5,
             tips=False,
@@ -186,7 +186,12 @@ class MainFunction(MovingCameraScene):
         self.wait(0.5)
         self.play(Write(textf4))
         self.wait(0.5)
-        self.play(FadeOut(textf3), textf4.animate.shift(UP*5.5), FadeOut(ax), FadeOut(curve), FadeOut(fivg1))
+
+        self.play(
+        FadeOut(textf3), textf4.animate.shift(UP*5.5), FadeOut(ax), FadeOut(curve), FadeOut(fivg1),
+        FadeOut(sigma1),FadeOut(sigma2),FadeOut(sigma3),FadeOut(sigma4),FadeOut(sigma5),FadeOut(sigma6),
+        FadeOut(l1), FadeOut(l2)
+        )
 
         sr3 = SurroundingRectangle(eqfin).set_color_by_gradient([YELLOW,PINK,PURPLE])
         self.play(Write(eqfin))
@@ -222,10 +227,10 @@ class MainFunction(MovingCameraScene):
         self.play(TransformMatchingTex(eqfin3,eqfin,transform_mismatches=True))
         self.play(eqfin.animate.shift(UP*3))
         sr2 = SurroundingRectangle(eqfin).set_color_by_gradient([BLUE_C,GREEN_C])
-        self.play(Write(sr2))
+        self.play(Write(sr2), eqfin.animate.set_color_by_gradient([BLUE_C,GREEN_C]))
         self.wait()
 
-    
+
         ax2 = Axes(
             x_range = [0, 3, 1],
             y_range = [0, 1, 0.5],
@@ -242,7 +247,7 @@ class MainFunction(MovingCameraScene):
 
         t = ValueTracker(0)
 
-        md = Dot(ax2.coords_to_point(0,0)).scale(0.7)
+        md = Dot(ax2.coords_to_point(0,0)).scale(0.7).set_color(ORANGE)
         md.add_updater(lambda x: x.move_to(ax2.c2p(t.get_value(), erf(t.get_value()))))
 
         xt = Tex(r"$\sigma$ = x = ").move_to(DOWN*2).scale(0.7)
@@ -273,7 +278,7 @@ class MainFunction(MovingCameraScene):
         )
         
         sefG = VGroup(sef, sef_value_text)
-        ss = always_redraw(lambda: SurroundingRectangle(sefG))
+        ss = SurroundingRectangle(sefG).set_color(ORANGE)
 
         tef = Tex(r"To sum up, let's just have a quick look at the ",r"Gaussian error function",r":", font_size=30).move_to(UP*2.5)
         tef[1].set_color_by_gradient([YELLOW,GREEN,BLUE])
