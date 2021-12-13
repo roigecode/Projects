@@ -186,7 +186,7 @@ class MainFunction(MovingCameraScene):
         self.wait(0.5)
         self.play(Write(textf4))
         self.wait(0.5)
-        self.play(FadeOut(textf3), textf4.animate.shift(UP*5.5), FadeOut(vg), FadeOut(fivg1))
+        self.play(FadeOut(textf3), textf4.animate.shift(UP*5.5), FadeOut(ax), FadeOut(curve), FadeOut(fivg1))
 
         sr3 = SurroundingRectangle(eqfin).set_color_by_gradient([YELLOW,PINK,PURPLE])
         self.play(Write(eqfin))
@@ -218,7 +218,7 @@ class MainFunction(MovingCameraScene):
         self.wait()
 
         eqfin.set_color(WHITE)
-        self.play(FadeOut(fivg3), FadeOut(textf4), FadeOut(vg))
+        self.play(FadeOut(l5),FadeOut(l6),FadeOut(area3), FadeOut(textf4), FadeOut(vg))
         self.play(TransformMatchingTex(eqfin3,eqfin,transform_mismatches=True))
         self.play(eqfin.animate.shift(UP*3))
         sr2 = SurroundingRectangle(eqfin).set_color_by_gradient([BLUE_C,GREEN_C])
@@ -267,7 +267,7 @@ class MainFunction(MovingCameraScene):
         
         sef_value_text = always_redraw(
             lambda: DecimalNumber(num_decimal_places=5)
-            .set_value(erf(t.get_value())/sqrt(2))
+            .set_value(erf(t.get_value()/sqrt(2)))
             .next_to(sef, RIGHT, buff=0.1)
             .scale(0.7)
         )
@@ -296,19 +296,15 @@ class MainFunction(MovingCameraScene):
         self.play(t.animate.set_value(3))
         self.play(Write(ss))
         self.wait()
-        self.play(Uncreate(ss),Unwrite(tef), Uncreate(ax2), Uncreate(erf1), Unwrite(md), Unwrite(xt), Unwrite(yt), Unwrite(xt_value_text), Unwrite(yt_value_text), Unwrite(sef), Unwrite(sef_value_text))
-        
-        xt_value_text.remove()
-        sef_value_text.remove()
-        yt_value_text.remove()
-
+        self.play(Uncreate(ss),Unwrite(tef), Uncreate(ax2), Uncreate(erf1), Uncreate(md), Unwrite(xt), Unwrite(yt), FadeOut(xt_value_text), FadeOut(yt_value_text), Uncreate(sef), FadeOut(sef_value_text))
+       
         sq = Square(side_length=1, color=WHITE, fill_opacity=0.5).move_to(DOWN*0.3).scale(0.25)
         sq.shift(RIGHT).set_color_by_gradient([PURPLE_C,WHITE])
         qed = Tex(r'Q.E.D.').set_color_by_gradient([PURPLE_C,WHITE])
         self.play(Write(qed), Create(sq))
         self.wait(2)
 
-        self.play(FadeOut(sq), FadeOut(qed))
+        self.play(Uncreate(sq), Unwrite(qed))
         self.wait(3)
 
 def PDF_normal(x, mu, sigma,k):
