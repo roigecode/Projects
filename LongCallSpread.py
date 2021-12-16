@@ -18,7 +18,8 @@ class MainFunction(MovingCameraScene):
         sq = Square(side_length=1, color=WHITE, fill_opacity=0.5).move_to(DOWN*0.3).scale(0.25)
         sq.shift(RIGHT).set_color_by_gradient([PURPLE_C,WHITE])
 
-        ex = Tex(r"Let's see how to set up one in a real brokerage account:")
+        ex = Tex(r"Let's see how to set a ",r" Long Call Spread",r" in a real brokerage account:", font_size=35)
+        ex[1].set_color_by_gradient([ORANGE,PINK,PURPLE])
         self.play(Write(ex))
         self.wait()
         self.play(Unwrite(ex))
@@ -99,7 +100,7 @@ def longcallandshortcall(self):
     )
 
     labels = ax.get_y_axis_label(Tex(r"P\&L [\$]", font_size=20))
-    y2 = MathTex(r"-847\$", font_size=fs).move_to(ax.c2p(405, -847))
+    y2 = MathTex(r"-847\$", font_size=20).move_to(ax.c2p(405, -847))
     y2.set_color_by_gradient([PURE_RED,RED])
     y2.shift(LEFT*0.6)
     ly1 = Line(ax.c2p(425, 0), ax.c2p(427, 0), stroke_width=0.9).move_to(ax.c2p(405, -847))
@@ -115,8 +116,9 @@ def longcallandshortcall(self):
     price = Tex(r"-847\$", font_size=20).move_to(ax.c2p(405,-847)).set_color_by_gradient([PURE_RED,RED])
     price.shift(LEFT*0.6)
 
-    price2 = MathTex(r'+\infty \$', font_size=20).move_to(ax.c2p(405,8964)).set_color_by_gradient([PURE_GREEN,GREEN])
+    price2 = MathTex(r'+\infty \$', font_size=20).move_to(ax.c2p(405,8961)).set_color_by_gradient([PURE_GREEN,GREEN])
     price2.shift(LEFT*0.5)
+    ly2 = Line(ax.c2p(425, 0), ax.c2p(427, 0), stroke_width=0.9).move_to(ax.c2p(405, -8961))
 
     # POLYGRAMS: Shade P&L areas:
     areatot1 = Polygram([ax.c2p(405, 0), ax.c2p(405, -847), ax.c2p(465, -847), ax.c2p(471, 0)], stroke_opacity=0, fill_color=PURE_RED, fill_opacity=0.5)
@@ -146,15 +148,15 @@ def longcallandshortcall(self):
     #profdot = Dot(ax.c2p(405, sigm(405)), radius=0.055).set_color(WHITE)
 
     # LONG CALL PLAYS:
-    self.play(Write(ax),Write(labels),Write(line_1), Create(areatot1), Create(areatot2), Write(ly1),Write(graph))
+    self.play(Write(ax),Write(labels),Write(line_1), Create(areatot1), Create(areatot2), Write(ly1), Write(ly2),Write(graph))
     self.wait(0.5)
-    self.play(Write(bc), Write(arrow1),Write(price),Write(price2),Rotate(ly1, PI))
+    self.play(Write(bc), Write(arrow1),Write(price),Write(price2),Rotate(ly1, PI), Rotate(ly2,PI))
     self.wait(2)
     self.play(Write(pdf),Write(pdf_text),Write(sd11),Write(sd12),Write(sd11_text),Write(sd12_text),Write(sd21),Write(sd22),Write(sd21_text),Write(sd22_text))
     self.wait(3)
-    self.play(FadeOut(ax),FadeOut(price),FadeOut(labels),FadeOut(line_1),FadeOut(areatot1),FadeOut(areatot2),FadeOut(ly1),FadeOut(graph),FadeOut(bc),FadeOut(arrow1), FadeOut(pdf),FadeOut(pdf_text),FadeOut(sd11),FadeOut(sd12),FadeOut(sd11_text),FadeOut(sd12_text),FadeOut(sd21),FadeOut(sd22),FadeOut(sd21_text),FadeOut(sd22_text))
+    self.play(FadeOut(ax),FadeOut(price),FadeOut(price2),FadeOut(ly2),FadeOut(labels),FadeOut(line_1),FadeOut(areatot1),FadeOut(areatot2),FadeOut(ly1),FadeOut(graph),FadeOut(bc),FadeOut(arrow1), FadeOut(pdf),FadeOut(pdf_text),FadeOut(sd11),FadeOut(sd12),FadeOut(sd11_text),FadeOut(sd12_text),FadeOut(sd21),FadeOut(sd22),FadeOut(sd21_text),FadeOut(sd22_text))
 
-    groupLongCall = VGroup(ax,labels,y2,ly1,graph,arrow1,bc,price,areatot1,areatot2,pdf,sd11,sd12,sd11_text,sd12_text,sd21,sd22,sd21_text,sd22_text,price2).scale(0.7)
+    groupLongCall = VGroup(ax,ly2,labels,y2,ly1,graph,arrow1,bc,price,areatot1,areatot2,pdf,sd11,sd12,sd11_text,sd12_text,sd21,sd22,sd21_text,sd22_text,price2).scale(0.7)
 
     # +-------------+ #
     # | SHORT CALL: | #
@@ -179,7 +181,7 @@ def longcallandshortcall(self):
     )
 
     labels = ax2.get_y_axis_label(Tex(r"P\&L [\$]", font_size=20))
-    y2 = MathTex(r"360\$", font_size=fs).move_to(ax2.c2p(405, 360)).set_color_by_gradient([PURE_GREEN,GREEN])
+    y2 = MathTex(r"360\$", font_size=20).move_to(ax2.c2p(405, 360)).set_color_by_gradient([PURE_GREEN,GREEN])
     y2.shift(LEFT*0.6)
     ly1 = Line(ax2.c2p(425, 0), ax2.c2p(427, 0), stroke_width=0.9).move_to(ax2.c2p(405, 360))
 
@@ -194,8 +196,9 @@ def longcallandshortcall(self):
     price = Tex(r"360\$", font_size=20).move_to(ax2.c2p(405,360)).set_color_by_gradient([PURE_GREEN,GREEN])
     price.shift(LEFT*0.6)
 
-    price2 = MathTex(r'"-\infty \$"', font_size=20).move_to(ax2.c2p(405,-5140)).set_color_by_gradient([PURE_RED,RED])
+    price2 = MathTex(r'"-\infty \$"', font_size=20).move_to(ax2.c2p(405,-5135)).set_color_by_gradient([PURE_RED,RED])
     price2.shift(LEFT*0.5)
+    ly2 = Line(ax.c2p(425, 0), ax.c2p(427, 0), stroke_width=0.9).move_to(ax.c2p(405, -5135))
 
     areatot1 = Polygram([ax2.c2p(405, 0), ax2.c2p(405, 360), ax2.c2p(480, 360), ax2.c2p(483.6, 0)], stroke_opacity=0, fill_color=PURE_RED, fill_opacity=0.5)
     areatot2 = Polygram([ax2.c2p(483.5, 0), ax2.c2p(535, 0), ax2.c2p(535, -5140)], stroke_opacity=0, fill_color=PURE_GREEN, fill_opacity=0.5)
@@ -224,13 +227,13 @@ def longcallandshortcall(self):
     #profdot = Dot(ax.c2p(405, sigm(405)), radius=0.055).set_color(WHITE)
     
     # SHORT CALL PLAYS:
-    self.play(Write(ax2),Write(labels),Write(line_1), Create(areatot1), Create(areatot2), Write(ly1),Write(graph))
+    self.play(Write(ax2),Write(labels),Write(line_1), Write(ly2), Create(areatot1), Create(areatot2), Write(ly1),Write(graph))
     self.wait(0.5)
-    self.play(Write(bc), Write(arrow1), Write(price), Write(price2),Rotate(ly1, PI))
+    self.play(Write(bc), Write(arrow1), Write(price), Write(price2),Rotate(ly1, PI), Rotate(ly2,PI))
     self.wait(2)
     self.play(Write(pdf),Write(pdf_text),Write(sd11),Write(sd12),Write(sd11_text),Write(sd12_text),Write(sd21),Write(sd22),Write(sd21_text),Write(sd22_text))
     self.wait(3)
-    self.play(FadeOut(ax2),FadeOut(price),FadeOut(price2),FadeOut(labels),FadeOut(line_1),FadeOut(areatot1),FadeOut(areatot2),FadeOut(ly1),FadeOut(graph),FadeOut(bc),FadeOut(arrow1), FadeOut(pdf),FadeOut(pdf_text),FadeOut(sd11),FadeOut(sd12),FadeOut(sd11_text),FadeOut(sd12_text),FadeOut(sd21),FadeOut(sd22),FadeOut(sd21_text),FadeOut(sd22_text))
+    self.play(FadeOut(ax2),FadeOut(price),FadeOut(ly2),FadeOut(price2),FadeOut(labels),FadeOut(line_1),FadeOut(areatot1),FadeOut(areatot2),FadeOut(ly1),FadeOut(graph),FadeOut(bc),FadeOut(arrow1), FadeOut(pdf),FadeOut(pdf_text),FadeOut(sd11),FadeOut(sd12),FadeOut(sd11_text),FadeOut(sd12_text),FadeOut(sd21),FadeOut(sd22),FadeOut(sd21_text),FadeOut(sd22_text))
     self.wait(2)
 
     comb = Tex(r"Now let's combine both strategies to get the ",r"Long Call Vertical Spread",r"!", font_size=30)
@@ -240,7 +243,7 @@ def longcallandshortcall(self):
     self.play(comb.animate.shift(UP*3))
     self.wait()
 
-    groupShortCall = VGroup(ax2,labels,y2,ly1,graph,arrow1,bc,price,areatot1,areatot2,pdf,sd11,sd12,sd11_text,sd12_text,sd21,sd22,sd21_text,sd22_text, price2).scale(0.7)
+    groupShortCall = VGroup(ly2,ax2,labels,y2,ly1,graph,arrow1,bc,price,areatot1,areatot2,pdf,sd11,sd12,sd11_text,sd12_text,sd21,sd22,sd21_text,sd22_text, price2).scale(0.7)
 
     sumsi = MathTex(r"+",font_size=100)
     
@@ -249,7 +252,7 @@ def longcallandshortcall(self):
     self.play(groupLongCall.animate.shift(LEFT*3))
     self.play(FadeIn(groupShortCall))
     self.play(groupShortCall.animate.scale(0.5))
-    self.play(groupShortCall.animate.shift(RIGHT*4))
+    self.play(groupShortCall.animate.shift(RIGHT*3.5))
     self.play(Write(sumsi))
 
     self.wait(2)
@@ -343,6 +346,8 @@ def longcallspread(self):
     self.play(Write(profdot))
     self.play(MoveAlongPath(profdot, sigmoid, rate_func=rate_functions.smooth), run_time=3)
 
+    self.wait(3)
+
     self.play(FadeOut(ax),FadeOut(areatot1),FadeOut(areatot2),FadeOut(graph),FadeOut(labels),FadeOut(y1),FadeOut(y2),FadeOut(ly1),FadeOut(ly2),FadeOut(longcall),
     FadeOut(ar1),FadeOut(ar2),FadeOut(shortput),FadeOut(sigmoid),FadeOut(pdf),FadeOut(pdf_text),FadeOut(sd11),FadeOut(sd12),FadeOut(sd21),FadeOut(sd22),FadeOut(sd11_text),
     FadeOut(sd12_text),FadeOut(sd21_text),FadeOut(sd22_text),FadeOut(profdot))
@@ -374,8 +379,8 @@ def longcallspread(self):
     dsvg = VGroup(deb,strk)
     self.play(dsvg.animate.arrange(DOWN,buff=.2,aligned_edge=LEFT))
 
-    self.play(dsvg.animate.shift(LEFT*4))
-    self.play(dsvg.animate.shift(UP*2))
+    self.play(dsvg.animate.shift(LEFT*3.5))
+    self.play(dsvg.animate.shift(UP*1.5))
 
     self.play(Write(proff))
     self.play(Write(loss))
@@ -383,9 +388,9 @@ def longcallspread(self):
     vgpl = VGroup(proff,loss,be)
     self.play(vgpl.animate.arrange(DOWN,buff=.2,aligned_edge=LEFT))
 
-    srp = SurroundingRectangle(proff).set_color_by_gradient([PURE_GREEN,GREEN])
-    srl = SurroundingRectangle(loss).set_color_by_gradient([PURE_RED,RED])
-    srb = SurroundingRectangle(be).set_color_by_gradient([GREY,WHITE])
+    srp = SurroundingRectangle(proff[2]).set_color_by_gradient([PURE_GREEN,GREEN])
+    srl = SurroundingRectangle(loss[2]).set_color_by_gradient([PURE_RED,RED])
+    srb = SurroundingRectangle(be[2]).set_color_by_gradient([GREY,WHITE])
 
     self.play(Create(srp))
     self.play(Create(srl))
@@ -393,7 +398,8 @@ def longcallspread(self):
 
     self.wait(4)
 
-    self.play(FadeOut(dsvg), FadeOut(vgpl), FadeOut(text1), Uncreate(srp), Uncreate(srl), Uncreate(srb))
+    self.play(Uncreate(srp), Uncreate(srl), Uncreate(srb))
+    self.play(FadeOut(dsvg), FadeOut(vgpl), FadeOut(text1))
 
     greeks = Tex(r"\underline{And finally, the Greeks!}").set_color_by_gradient([YELLOW,GREEN_C])
     self.play(Write(greeks))
