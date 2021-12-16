@@ -117,7 +117,7 @@ def longcallandshortcall(self):
     price.shift(LEFT*0.6)
 
     price2 = MathTex(r'+\infty \$', font_size=20).move_to(ax.c2p(405,8961)).set_color_by_gradient([PURE_GREEN,GREEN])
-    price2.shift(LEFT*0.5)
+    price2.shift(LEFT*0.6)
     ly2 = Line(ax.c2p(425, 0), ax.c2p(427, 0), stroke_width=0.9).move_to(ax.c2p(405, -8961))
 
     # POLYGRAMS: Shade P&L areas:
@@ -197,7 +197,7 @@ def longcallandshortcall(self):
     price.shift(LEFT*0.6)
 
     price2 = MathTex(r'"-\infty \$"', font_size=20).move_to(ax2.c2p(405,-5135)).set_color_by_gradient([PURE_RED,RED])
-    price2.shift(LEFT*0.5)
+    price2.shift(LEFT*0.6)
     ly2 = Line(ax.c2p(425, 0), ax.c2p(427, 0), stroke_width=0.9).move_to(ax.c2p(405, -5135))
 
     areatot1 = Polygram([ax2.c2p(405, 0), ax2.c2p(405, 360), ax2.c2p(480, 360), ax2.c2p(483.6, 0)], stroke_opacity=0, fill_color=PURE_RED, fill_opacity=0.5)
@@ -252,7 +252,7 @@ def longcallandshortcall(self):
     self.play(groupLongCall.animate.shift(LEFT*3))
     self.play(FadeIn(groupShortCall))
     self.play(groupShortCall.animate.scale(0.5))
-    self.play(groupShortCall.animate.shift(RIGHT*3.5))
+    self.play(groupShortCall.animate.shift(RIGHT*3.75))
     self.play(Write(sumsi))
 
     self.wait(2)
@@ -365,11 +365,11 @@ def longcallspread(self):
     proff[0].set_color_by_gradient([PURE_GREEN,GREEN])
     proff[2].set_color_by_gradient([PURE_GREEN,GREEN])
 
-    loss = MathTex(r"\text{Max. Loss}",r" = D = -6.74\$ \cdot 100 = ",r" -647\$", font_size=30).move_to(DOWN)
+    loss = MathTex(r"\text{Max. Loss}",r" = D = -6.74\$ \cdot 100 = ",r" -647\$", font_size=30).move_to(DOWN*1.5)
     loss[0].set_color_by_gradient([PURE_RED,RED])
     loss[2].set_color_by_gradient([PURE_RED,RED])
 
-    be = MathTex(r"\text{Break Even}",r" = S_A + D = 465 + 6.47\$ \approx",r" 471.5\$", font_size=30).move_to(DOWN*2)
+    be = MathTex(r"\text{Break Even}",r" = S_A + D = 465 + 6.47\$ \approx",r" 471.5\$", font_size=30).move_to(DOWN*3)
     be[0].set_color_by_gradient([GREY,WHITE])
     be[2].set_color_by_gradient([GREY,WHITE])
 
@@ -379,7 +379,7 @@ def longcallspread(self):
     dsvg = VGroup(deb,strk)
     self.play(dsvg.animate.arrange(DOWN,buff=.2,aligned_edge=LEFT))
 
-    self.play(dsvg.animate.shift(LEFT*3.5))
+    self.play(dsvg.animate.shift(LEFT*3.25))
     self.play(dsvg.animate.shift(UP*1.5))
 
     self.play(Write(proff))
