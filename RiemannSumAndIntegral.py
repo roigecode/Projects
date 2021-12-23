@@ -26,7 +26,7 @@ class MainFunction(MovingCameraScene):
         s = MathTex(r'\sum_{k=1}^{n} ',r'f(t_k)',r'(x_k - x_{k-1})',r'; \quad x_{k-1} \leqslant t_k \leqslant x_k', font_size=30).shift(RIGHT*4,UP*3)
         s1 = MathTex(r'\int_{a}^{b} f(x)dx; \quad [a,b] \subset \mathbb{R}^{1}', font_size=30).shift(RIGHT*3,UP*3)
         s2 = MathTex(r'\int_{0.4}^{0.7} f(x)dx', font_size=30).shift(RIGHT*3,DOWN*2)
-        s3 = MathTex(r'\int_{0.4}^{0.7} -',r'x',r'(x-1)',r'(x+1)',r'dx \approx 0.11 ', font_size=30).shift(RIGHT*3,DOWN*2)
+        s3 = MathTex(r'\int_{0.4}^{0.7} -',r'x',r'(x+1)',r'(x-1)',r'dx \approx 0.11 ', font_size=30).shift(RIGHT*3,DOWN*2)
 
         gc = VGroup(s[1],s[2])
 
@@ -97,12 +97,12 @@ class MainFunction(MovingCameraScene):
         self.wait()
 
         self.play(Write(d2))
-        self.play(s3[3].animate.set_color(PURPLE))
-        self.play(Transform(d2.copy(),s3[3]))
+        self.play(s3[2].animate.set_color(PURPLE))
+        self.play(Transform(d2.copy(),s3[2]))
         self.wait()
 
         self.play(Write(d3))
-        self.play(s3[2].animate.set_color(ORANGE))
-        self.play(Transform(d3.copy(),s3[2]))
+        self.play(s3[3].animate.set_color(ORANGE))
+        self.play(Transform(d3.copy(),s3[3]))
 
         self.wait(5)
