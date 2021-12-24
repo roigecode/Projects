@@ -63,8 +63,8 @@ class MainFunction(MovingCameraScene):
 
         vgc = VGroup(ci,c0,c1,c2,c3,c4,c5,c6,c7,c8,c9)
         vgg = VGroup(gi,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9)
-        vgp = VGroup(pi,p0,p1,p2,p3,p4,p5,p6,p7,p8,p9).move_to(RIGHT)
-        vge = VGroup(ei,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9).move_to(RIGHT*4)
+        vgp = VGroup(pi,p0,p1,p2,p3,p4,p5,p6,p7,p8,p9).move_to(RIGHT*2)
+        vge = VGroup(ei,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9).move_to(RIGHT*5)
         vgtot = VGroup(vgc,vgp,vgg, vge)
 
         self.play(Write(vgc))
@@ -74,11 +74,15 @@ class MainFunction(MovingCameraScene):
         self.play(vgg.animate.shift(LEFT))
     
         self.play(Write(vgp))
-        self.play(vgp.animate.shift(RIGHT*0.5))
 
         self.play(Write(vge))
 
         sr = SurroundingRectangle(vgtot, buff=0.5).set_color_by_gradient([RED,PINK])
         self.play(Write(sr))
+
+        allg = VGroup(vgtot, sr)
+        d = Dot()
+
+        self.play(allg.animate.move_to(d.get_center()))
 
         self.wait(5)
