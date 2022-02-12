@@ -4,10 +4,23 @@ import requests
 import pandas_datareader as web
 import datetime as dt
 
+# @Author: roigecode
+# Este archivo nos permite obtener las Gas Fees de Ethereum desde diversas fuentes.
+
+"""
+Sample Output:
+--------------
+DefiPulse (2022-02-12 06:15:27.483680) || GWEI >> Fast: 72.0  Average: 58.0  Safe Low: 51.0
+DefiPulse (2022-02-12 06:15:27.483680) || UDS >> Fast: 2.12$  Average: 1.7$  Safe Low: 1.5$
+
+Etherscan (2022-02-12 06:15:29.492838) || GWEI >> Fast: 38.0  Average: 38.0  Safe Low: 36.036039307
+Etherscan (2022-02-12 06:15:29.492838) || UDS >> Fast: 1.12$  Average: 1.12$  Safe Low: 1.06$
+"""
+
 class EthGasFees:
-    """
-    Esta clase contiene las Gas Fees y el precio de ETH
-    """
+
+    #Esta clase contiene las Gas Fees y el precio de ETH:
+
     # Constructor:
     def __init__(self,_resource,_req,_fast=0,_average=0,_safeLow=0):
         # De momento no uso el req pero se hará:
@@ -17,6 +30,8 @@ class EthGasFees:
         self.fast = float(_fast)
         self.average = float(_average)
         self.safeLow = float(_safeLow)
+        # Fecha y hora de la llamada:
+        self.datetime = dt.datetime.now()
 
     # Get Eth Price:
     def get_eth_usd(self):
@@ -40,6 +55,9 @@ class EthGasFees:
     # GETTERS:
     def get_resource(self):
         return self.resource
+
+    def get_datetime(self):
+        return self.datetime
 
     # Fast:
     def get_fast(self):
@@ -76,16 +94,18 @@ class EthGasFees:
 
     # Printers:
     def display_gwei(self):
-        return "\n{} || GWEI >> Fast: {}  Average: {}  Safe Low: {}".format(
-                                                                                   self.get_resource(),
-                                                                                   self.get_fast(),
-                                                                                   self.get_average(), 
-                                                                                   self.get_safeLow())
+        return "\n{} ({}) || GWEI >> Fast: {}  Average: {}  Safe Low: {}".format(
+                                                                            self.get_resource(),
+                                                                            self.get_datetime(),
+                                                                            self.get_fast(),
+                                                                            self.get_average(), 
+                                                                            self.get_safeLow())
 
     # 1 ether son 1,000,000,000 Gwei
     def display_usd(self):
-        return "{} || UDS >> Fast: {}$  Average: {}$  Safe Low: {}$".format(
+        return "{} ({}) || UDS >> Fast: {}$  Average: {}$  Safe Low: {}$".format(
                                                                            self.get_resource(),
+                                                                           self.get_datetime(),
                                                                            self.get_fast_usd(),
                                                                            self.get_average_usd(),
                                                                            self.get_safeLow_usd())
