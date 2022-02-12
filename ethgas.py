@@ -10,11 +10,11 @@ import datetime as dt
 """
 Sample Output:
 --------------
-DefiPulse (2022-02-12 06:15:27.483680) || GWEI >> Fast: 72.0  Average: 58.0  Safe Low: 51.0
-DefiPulse (2022-02-12 06:15:27.483680) || UDS >> Fast: 2.12$  Average: 1.7$  Safe Low: 1.5$
+DefiPulse (2022-02-12 14:20:54.983972) || GWEI >> Fast: 53.0  Average: 44.0  Safe Low: 38.0
+DefiPulse (2022-02-12 14:20:54.983972) || UDS >> Fast: 1.55$  Average: 1.28$  Safe Low: 1.11$
 
-Etherscan (2022-02-12 06:15:29.492838) || GWEI >> Fast: 38.0  Average: 38.0  Safe Low: 36.036039307
-Etherscan (2022-02-12 06:15:29.492838) || UDS >> Fast: 1.12$  Average: 1.12$  Safe Low: 1.06$
+Etherscan (2022-02-12 14:20:57.379089) || GWEI >> Fast: 40.0  Average: 39.0  Safe Low: 38.133289166
+Etherscan (2022-02-12 14:20:57.379089) || UDS >> Fast: 1.17$  Average: 1.14$  Safe Low: 1.11$
 """
 
 class EthGasFees:
