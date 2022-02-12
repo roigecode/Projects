@@ -14,6 +14,7 @@ import datetime as dt
 """
 
 TO DO: Apply Parallel Requests, one API call does not have to wait until other is finished!
+       Check mean calculation, too slow probably because of 'round()'
 
 Sample Output:
 --------------
