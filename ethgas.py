@@ -24,38 +24,60 @@ class EthGasFees:
 
         # Leemos el precio de ETH-USD:
         eth_price_pandas_Series = web.DataReader('ETH-USD', 'yahoo', dia_anterior, actual_time)
+        closes = eth_price_pandas_Series['Close'].values
+        close = closes[1]
 
         # Convertimos el valor a flotante y lo retornamos:
-        return float(eth_price_pandas_Series['Close'].values)
+        return float(close)
 
     # Conversor de gwei a usd:
     def conversor_gwei_usd(self,gwei):
         ethusd = self.get_eth_usd()
         return round(gwei/10 * ethusd/1000,2)
 
-    # Getters:
+    # GETTERS:
+
+    # Fastest:
     def get_fastest(self):
         return self.fastest
     
+    def get_fastest_usd(self):
+        return self.conversor_gwei_usd(self.fastest)
+
+    # Fast:
     def get_fast(self):
         return self.fast
+    
+    def get_fast_usd(self):
+        return self.conversor_gwei_usd(self.fast)
 
+    # Average:
     def get_average(self):
         return self.average
     
+    def get_average_usd(self):
+        return self.conversor_gwei_usd(self.average)
+
+    # Safe Low:
     def get_safeLow(self):
         return self.safeLow
+    
+    def get_safeLow_usd(self):
+        return self.conversor_gwei_usd(self.safeLow)
 
     # Printers:
     def display_gwei(self):
-        return "\nGWEI >> Fastest: {}  Fast: {}  Average: {}  Safe Low: {}".format(self.get_fastest(), self.get_fast(),self.get_average(), self.get_safeLow())
+        return "\nGWEI >> Fastest: {}  Fast: {}  Average: {}  Safe Low: {}".format(self.get_fastest(), 
+                                                                                   self.get_fast(),
+                                                                                   self.get_average(), 
+                                                                                   self.get_safeLow())
 
     # 1 ether son 1,000,000,000 Gwei
     def display_usd(self):
-        return "\nUDS >> Fastest: {}$  Fast: {}$  Average: {}$  Safe Low: {}$".format(self.conversor_gwei_usd(self.get_fastest()),
-                                                                           self.conversor_gwei_usd(self.get_fast()),
-                                                                           self.conversor_gwei_usd(self.get_average()),
-                                                                           self.conversor_gwei_usd(self.get_safeLow()))
+        return "\nUDS >> Fastest: {}$  Fast: {}$  Average: {}$  Safe Low: {}$".format(self.get_fastest_usd(),
+                                                                           self.get_fast_usd(),
+                                                                           self.get_average_usd(),
+                                                                           self.get_safeLow_usd())
 
 # -------- #
 # PROGRAMA #
@@ -78,6 +100,6 @@ if __name__ == "__main__":
     safeLow = json_resp['safeLow']
 
     eth_object = EthGasFees(req,fastest,fast,average,safeLow)
-    
+
     print(eth_object.display_gwei())
     print(eth_object.display_usd())
