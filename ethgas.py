@@ -102,7 +102,10 @@ if __name__ == "__main__":
     except requests.exceptions.RequestException as e:
         raise SystemExit(e)
 
-    # DEFI-PULSE:
+
+    # ----------- #
+    # DEFI-PULSE: #
+    # ----------- #
 
     # Convertimos los datos en json:
     json_resp = req.json()
@@ -118,7 +121,10 @@ if __name__ == "__main__":
     print(eth_defipulse.display_usd())
 
 
-    # ETHERSCAN:
+    # ---------- #
+    # ETHERSCAN: #
+    # ---------- #
+
     json_resp2 = req_etherscan.json()
 
     fast_etherscan = json_resp2['result']['FastGasPrice']
