@@ -63,9 +63,9 @@ class EthGasFees:
     # Fast:
     def get_fast(self):
         if self.get_resource() == "Etherscan":
-            return self.fast
+            return round(self.fast,2)
         elif self.get_resource() == "DefiPulse":
-            return self.fast/10
+            return round(self.fast/10,2)
     
     def get_fast_usd(self):
         return self.conversor_gwei_usd(self.get_fast())
@@ -74,9 +74,9 @@ class EthGasFees:
     # Average:
     def get_average(self):
         if self.get_resource() == "Etherscan":
-            return self.average
+            return round(self.average,2)
         elif self.get_resource() == "DefiPulse":
-            return self.average/10
+            return round(self.average/10,2)
     
     def get_average_usd(self):
         return self.conversor_gwei_usd(self.get_average())
@@ -84,9 +84,9 @@ class EthGasFees:
     # Safe Low:
     def get_safeLow(self):
         if self.get_resource() == "Etherscan":
-            return self.safeLow
+            return round(self.safeLow,2)
         elif self.get_resource() == "DefiPulse":
-            return self.safeLow/10
+            return round(self.safeLow/10,2)
     
     def get_safeLow_usd(self):
         return self.conversor_gwei_usd(self.get_safeLow())
