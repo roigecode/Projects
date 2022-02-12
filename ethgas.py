@@ -1,4 +1,5 @@
 from urllib import response
+from time import sleep
 import config
 import requests
 import pandas_datareader as web
@@ -13,7 +14,7 @@ Sample Output:
 DefiPulse (2022-02-12 14:20:54.983972) || GWEI >> Fast: 53.0  Average: 44.0  Safe Low: 38.0
 DefiPulse (2022-02-12 14:20:54.983972) || UDS >> Fast: 1.55$  Average: 1.28$  Safe Low: 1.11$
 
-Etherscan (2022-02-12 14:20:57.379089) || GWEI >> Fast: 40.0  Average: 39.0  Safe Low: 38.133289166
+Etherscan (2022-02-12 14:20:57.379089) || GWEI >> Fast: 40.0  Average: 39.0  Safe Low: 38.13
 Etherscan (2022-02-12 14:20:57.379089) || UDS >> Fast: 1.17$  Average: 1.14$  Safe Low: 1.11$
 """
 
@@ -67,10 +68,8 @@ class EthGasFees:
             return self.fast/10
     
     def get_fast_usd(self):
-        if self.get_resource() == "Etherscan":
-            return self.conversor_gwei_usd(self.get_fast())
-        elif self.get_resource() == "DefiPulse":
-            return self.conversor_gwei_usd(self.get_fast())
+        return self.conversor_gwei_usd(self.get_fast())
+        
         
     # Average:
     def get_average(self):
@@ -137,9 +136,7 @@ if __name__ == "__main__":
 
     eth_defipulse = EthGasFees("DefiPulse",req,fast_defipulse,average_defipulse,safeLow_defipulse)
 
-    print(eth_defipulse.display_gwei())
-    print(eth_defipulse.display_usd())
-
+    
 
     # ---------- #
     # ETHERSCAN: #
@@ -153,5 +150,7 @@ if __name__ == "__main__":
 
     eth_etherscan = EthGasFees("Etherscan",req,fast_etherscan,average_etherscan,safeLow_etherscan)
 
+    print(eth_defipulse.display_gwei())
+    print(eth_defipulse.display_usd())
     print(eth_etherscan.display_gwei())
     print(eth_etherscan.display_usd())
