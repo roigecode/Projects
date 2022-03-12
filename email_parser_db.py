@@ -58,7 +58,7 @@ imap.login(f"{credentials.USERNAME}", f"{credentials.PASSWORD}")
 status, messages = imap.select("INBOX")
 
 # Number of top emails to fetch, change to all after testing:
-N = 5
+# N = 5
 
 # Total of emails:
 messages = int(messages[0])
@@ -211,6 +211,3 @@ except:
     print(">> ERROR: Asegúrate de no tener el EXCEL abierto!")
 
 print("\n>> ¡EXCEL CREADO CON ÉXITO! <<\n")
-
-
-
