@@ -11,7 +11,6 @@ print("-> Introduce la fecha inicial de inscripciones en formato (y-m-d h-m-s)")
 print("-> Ejemplo: 2022-03-19 13:57:00")
 #FECHA_INICIAL = input(">> ")
 
-
 # This function parses de IMAP date into a datetime format
 def parseDate(date_string):
 
@@ -58,7 +57,7 @@ imap.login(f"{credentials.USERNAME}", f"{credentials.PASSWORD}")
 status, messages = imap.select("INBOX")
 
 # Number of top emails to fetch, change to all after testing:
-# N = 5
+N = 5
 
 # Total of emails:
 messages = int(messages[0])
@@ -168,11 +167,19 @@ for i in range(1,CONTADOR_INSCRIPCIONES):
         aux2 = aux1.replace('</p>','')
         p[i] = aux2
 
-    nombres.append((p[1], p[9]))
-    emails.append((p[3], p[11]))
-    telf.append((p[5], p[13]))
-    sexo_y_talla.append((p[7], p[15]))
-    categoria.append((p[17]))
+    if (p[1], p[9]) not in nombres:
+        nombres.append((p[1], p[9]))
+        emails.append((p[3], p[11]))
+        telf.append((p[5], p[13]))
+        sexo_y_talla.append((p[7], p[15]))
+        categoria.append((p[17]))
+    else:
+        print(f'>> ¡REPETIDO! : ', (p[1], p[9]))
+        nombres.append((f'>> ¡REPETIDO! : ', p[1], p[9]))
+        emails.append((p[3], p[11]))
+        telf.append((p[5], p[13]))
+        sexo_y_talla.append((p[7], p[15]))
+        categoria.append((p[17]))
     
     try:
         if p[19] == "Tades":
