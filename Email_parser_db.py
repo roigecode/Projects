@@ -149,7 +149,6 @@ imap.close()
 imap.logout()
 
 # Use beautiful soup to read the html files:
-
 nombres = []
 emails = []
 telf = []
@@ -168,48 +167,52 @@ for i in range(1,CONTADOR_INSCRIPCIONES):
         p[i] = aux2
 
     if (p[1], p[9]) not in nombres:
-        nombres.append((p[1], p[9]))
-        emails.append((p[3], p[11]))
-        telf.append((p[5], p[13]))
-        sexo_y_talla.append((p[7], p[15]))
-        categoria.append((p[17]))
+        try:
+            nombres.append((p[1], p[9]))
+            emails.append((p[3], p[11]))
+            telf.append((p[5], p[13]))
+            sexo_y_talla.append((p[7], p[15]))
+            categoria.append((p[17]))
+            if p[19] == '2 x Sudadera Golden Point (40€)':
+                horario_pref.append(p[19])
+            else:
+                horario_pref.append(p[19])
+        except:
+            print("Error en inscripcion: ", i)
+
+       
     else:
         print(f'>> ¡REPETIDO! : ', (p[1], p[9]))
-        nombres.append((f'>> ¡REPETIDO! : ', p[1], p[9]))
-        emails.append((p[3], p[11]))
-        telf.append((p[5], p[13]))
-        sexo_y_talla.append((p[7], p[15]))
-        categoria.append((p[17]))
-    
-    try:
-        if p[19] == "Tades":
-            p[19] = "Tardes (15:00h - 22:00h)"
-            horario_pref.append(p[19])
-        elif p[19] == "Mañanas":
-            p[19] = "Mañanas (9:00h - 15:00h)"
-            horario_pref.append(p[19])
-        elif p[19] == '2 x Sudadera Golden Point (40€)':
-            horario_pref.append(p[19])
-        else:
-            horario_pref.append(p[19])
-    except:
-        horario_pref.append(('-'))
 
-columnas = [nombres,emails,telf,sexo_y_talla, categoria, horario_pref, ropa_extra]
-    
-df = pd.DataFrame({
+columnas = [nombres,emails,telf,sexo_y_talla, categoria, horario_pref]
+
+while len(categoria) != len(nombres):
+    categoria.append("-")
+
+while len(horario_pref) != len(nombres):
+    horario_pref.append("-")
+
+print("\n\t>> Longitudes <<\n")
+for i in range(len(columnas)):
+    print(len(columnas[i]))
+
+try:  
+    df = pd.DataFrame({
     'Nombres' : nombres,
     'Emails' : emails,
     'Teléfonos' : telf,
     'Sexo - Talla' : sexo_y_talla,
     'Categoría' : categoria,
     'Horario Pref.' : horario_pref,
-})
+    })
 
-writer = pd.ExcelWriter('inscripciones.xlsx', engine='xlsxwriter')
+    writer = pd.ExcelWriter('inscripciones.xlsx', engine='xlsxwriter')
 
-# Convert the dataframe to an XlsxWriter Excel object.
-df.to_excel(writer, sheet_name='Inscripciones', index=False)
+    # Convert the dataframe to an XlsxWriter Excel object.
+    df.to_excel(writer, sheet_name='Inscripciones', index=False)
+except:
+    #print(nombres)
+    pass
 
 # Close the Pandas Excel writer and output the Excel file.
 try:
